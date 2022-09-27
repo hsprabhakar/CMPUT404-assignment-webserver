@@ -135,8 +135,11 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 #exit() # freetests case 4
             else:
                 #if ends in / ... else if file specified
-                if resource[-1] == '/': #append index.html
-                    path += "/index.html"
+                if ((not resource.endswith(".html")) and (not resource.endswith(".css"))): #append index.html
+                    if not resource.endswith('/'):
+                        path += "/index.html"
+                    else:
+                        path += 'index.html'
                     mime_type = 'text/html'
 
                     if not os.path.exists(path): # if assumed index.html DNE
@@ -161,7 +164,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 
                         #exit() # freetests case 2
 
-                else: # else a file is specified
+                else: # else a file is specified OR folder without / ending
+                    # check if its a folder without / ending
                     with open(path, 'rb') as fp:
                         buf = fp.read()
                         print("file read and loaded")
